@@ -1,62 +1,71 @@
-const myNodeList = document.querySelectorAll('LI');
+class ToDoApp  {
+    constructor(myNodeList, close, unorderedList) {
+        this.myNodeList = myNodeList;
+        this.close = close;
+        this.unorderedList = unorderedList;
+    };
 
-myNodeList.forEach(elem => {
-    let span = document.createElement('SPAN');
-    let text = document.createTextNode('\u00D7');
-    span.className = 'close';
-    span.appendChild(text);
-    elem.appendChild(span);
-});
+    addNewItem () {
+        let li = document.createElement('li');
+        let inputValue = document.querySelector('.form__container--input').value;
+        let textNode = document.createTextNode(inputValue);
+        li.appendChild(textNode);
+        if (inputValue !== '') {
+            document.querySelector('.list').appendChild(li);
+        } else {
+            console.log(inputValue);
+            alert("C'mon - you should write something, don't be so lazy !");
+        }
 
+        document.querySelector('.form__container--input').value = '';
 
-const close = document.querySelectorAll('.close');
+        let span = document.createElement('SPAN');
+        let text = document.createTextNode('\u00D7');
+        span.className = 'close';
+        span.appendChild(text);
+        li.appendChild(span);
 
-close.forEach(elem => {
-    elem.onclick = function () {
-        let div = this.parentElement;
-        div.style.display = 'none';
+        let close = document.querySelectorAll('.close');
+
+        close.forEach(elem => elem.onclick = function () {
+            let div = this.parentElement;
+            div.style.display = 'none';
+        });
     }
-});
 
-const unorderedList = document.querySelector('ul');
-
-unorderedList.addEventListener('click', function (elem) {
-    if (elem.target.tagName === 'LI') {
-        elem.target.classList.toggle('checked');
+    addCloseIcon(myNodeList) {
+        myNodeList.forEach(elem => {
+            let span = document.createElement('SPAN');
+            let text = document.createTextNode('\u00D7');
+            span.className = 'close';
+            span.appendChild(text);
+            elem.appendChild(span);
+        });
     }
-}, false);
 
-function refreshElements() {
+    hideInactiveElements(close) {
+        close.forEach(elem => {
+            elem.onclick = function () {
+                let div = this.parentElement;
+                div.style.display = 'none';
+            }
+        });
+    }
 
+    selectActiveElement(unorderedList) {
+        unorderedList.addEventListener('click', function (elem) {
+            if (elem.target.tagName === 'LI') {
+                elem.target.classList.toggle('checked');
+            }
+        }, false);
+    }
 }
 
-function addNewItem() {
-
-    let li = document.createElement('li');
-    let inputValue = document.querySelector('.form__container--input').value;
-    let textNode = document.createTextNode(inputValue);
-    li.appendChild(textNode);
-    if (inputValue) {
-        document.querySelector('.list').appendChild(li);
-    } else {
-        alert("C'mon - you should write something, don't be so lazy !");
-    }
-
-    document.querySelector('.form__container--input').value = '';
-
-    let span = document.createElement('SPAN');
-    let text = document.createTextNode('\u00D7');
-    span.className = 'close';
-    span.appendChild(text);
-    li.appendChild(span);
-
-    let close = document.querySelectorAll('.close');
-
-    close.forEach(elem => elem.onclick = function () {
-        let div = this.parentElement;
-        div.style.display = 'none';
-    });
-}
+let toDoItems = new ToDoApp(document.querySelectorAll('LI'), document.querySelectorAll('.close'));
+let promise = new Promise ((res, rej) => {
+    toDoItems.addNewItem();
+});
+promise.then(toDoItems.selectActiveElement(document.querySelector('.list')));
 /*
 const storagedItems = {
     'content': (function () {
@@ -81,3 +90,4 @@ const getItemFromLocalStorage = function () {
         }
     }
 }; */
+
