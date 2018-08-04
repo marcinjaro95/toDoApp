@@ -1,20 +1,19 @@
-class ToDoApp  {
-    constructor(myNodeList, close, unorderedList) {
-        this.myNodeList = myNodeList;
-        this.close = close;
-        this.unorderedList = unorderedList;
+class ToDoApp {
+    constructor() {
+        this.myNodeList = document.querySelectorAll('.item');
+        this.close = document.querySelectorAll('.close');
+        this.unorderedList = document.querySelector('.list');
     };
 
-    addNewItem () {
+    addNewItem() {
         let li = document.createElement('li');
         let inputValue = document.querySelector('.form__container--input').value;
         let textNode = document.createTextNode(inputValue);
+
+        li.className = 'item';
         li.appendChild(textNode);
         if (inputValue !== '') {
             document.querySelector('.list').appendChild(li);
-        } else {
-            console.log(inputValue);
-            alert("C'mon - you should write something, don't be so lazy !");
         }
 
         document.querySelector('.form__container--input').value = '';
@@ -27,10 +26,22 @@ class ToDoApp  {
 
         let close = document.querySelectorAll('.close');
 
-        close.forEach(elem => elem.onclick = function () {
-            let div = this.parentElement;
-            div.style.display = 'none';
+        close.forEach(elem => {
+            elem.onclick = function () {
+                let listItem = this.parentElement;
+                listItem.style.display = 'none';
+            }
         });
+    }
+
+    onEnterPress() {
+        let btn = document.querySelector('.form__container--button');
+        document.addEventListener("keyup", function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                btn.click();
+            }
+        })
     }
 
     addCloseIcon(myNodeList) {
@@ -46,8 +57,8 @@ class ToDoApp  {
     hideInactiveElements(close) {
         close.forEach(elem => {
             elem.onclick = function () {
-                let div = this.parentElement;
-                div.style.display = 'none';
+                let listItem = this.parentElement;
+                listItem.style.display = 'none';
             }
         });
     }
@@ -61,33 +72,9 @@ class ToDoApp  {
     }
 }
 
-let toDoItems = new ToDoApp(document.querySelectorAll('LI'), document.querySelectorAll('.close'));
-let promise = new Promise ((res, rej) => {
+let toDoItems = new ToDoApp();
+let promise = new Promise(() => {
+    toDoItems.onEnterPress();
     toDoItems.addNewItem();
 });
 promise.then(toDoItems.selectActiveElement(document.querySelector('.list')));
-/*
-const storagedItems = {
-    'content': (function () {
-        let array = [];
-        let items = document.querySelectorAll('LI');
-        for(let i =0; i<items.length;i++) {
-           array.push( items[i].textContent.split(/.$/)[0].split(','));
-        }
-        return array;
-    })()
-};
-
-setItemInLocalStorage = function () {
-     localStorage.setItem('list', JSON.stringify(storagedItems.content));
-};
-
-const getItemFromLocalStorage = function () {
-    if(localStorage.getItem('list')) {
-        let items = localStorage.getItem('list');
-        for(let i = 0; i<items.length;i++) {
-
-        }
-    }
-}; */
-

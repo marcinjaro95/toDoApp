@@ -16,6 +16,7 @@
             <div class="form__container col-12">
                     <input class="form__container--input" type="text" placeholder="Task to do">
                     <button class="form__container--button" onclick="toDoItems.addNewItem();"type="submit">Add</button>
+                    <button class="form__container--button" onclick="storage.setItemInLocalStorage();"type="submit">Save</button>
             </div>
             <div class="list__container col-12">
                 <ul class="list">
@@ -23,5 +24,6 @@
             </div>
     </div>
     <script src="script.js"></script>
+    <script src="storage.js"></script>
 </body>
 </html>
